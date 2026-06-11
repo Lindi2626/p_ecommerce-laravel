@@ -11,17 +11,16 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->string('transaction_id')->unique()->nullable(); // dari Midtrans
-            $table->decimal('amount', 10, 2);
+            $table->string('transaction_id')->nullable(); // ID transaksi dari Midtrans
+            $table->string('payment_type')->nullable();   // gopay, credit_card, bank_transfer, dll
             $table->enum('status', [
                 'pending',
                 'success',
                 'failed',
                 'expired'
             ])->default('pending');
-            $table->string('payment_method')->nullable(); // gopay, bca, dll
-            $table->string('snap_token')->nullable();     // token Midtrans
-            $table->timestamp('paid_at')->nullable();
+            $table->decimal('amount', 12, 2);
+            $table->json('payload')->nullable(); // raw response JSON dari Midtrans
             $table->timestamps();
         });
     }
